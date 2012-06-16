@@ -67,6 +67,15 @@ class RubyJID
     node.is_a?(RubyJID) ? node : super
   end
 
+  # Validate a JID
+  #
+  # @return [Boolean] true if a valid JID, otherwise false
+  def self.valid?(node, domain = nil, resource = nil)
+    !!new(node, domain, resource)
+  rescue ArgumentError
+    false
+  end
+
   # Create a new JID object
   #
   # @overload initialize(jid)
