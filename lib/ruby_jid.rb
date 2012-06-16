@@ -62,10 +62,27 @@ class RubyJID
   attr_reader :node, :domain, :resource
   attr_writer :resource
 
+  # @private
   def self.new(node, domain = nil, resource = nil)
     node.is_a?(RubyJID) ? node : super
   end
 
+  # Create a new JID object
+  #
+  # @overload initialize(jid)
+  #   Passes the jid object right back out
+  #   @param [RubyJID] jid a jid object
+  # @overload initialize(jid)
+  #   Creates a new JID parsed out of the provided jid
+  #   @param [String] jid a jid in the standard format
+  #   ("node@domain/resource")
+  # @overload initialize(node, domain = nil, resource = nil)
+  #   Creates a new JID
+  #   @param [String] node the node of the JID
+  #   @param [String, nil] domian the domain of the JID
+  #   @param [String, nil] resource the resource of the JID
+  # @raise [ArgumentError] if the parts of the JID are too large (1023 bytes)
+  # @return [RubyJID] a new jid object
   def initialize(node, domain = nil, resource = nil)
     @node, @domain, @resource = node, domain, resource
 
@@ -81,6 +98,8 @@ class RubyJID
   # JID object. The new JID contains only the optional node part
   # and the required domain part from the original. This JID remains
   # unchanged.
+  #
+  # @return [RubyJID] a new JID without a resource
   def bare
     RubyJID.new @node, @domain
   end
@@ -115,6 +134,15 @@ class RubyJID
     self.to_s.hash
   end
 
+  # Turn the JID into a string
+  #
+  # * ""
+  # * "domain"
+  # * "node@domain"
+  # * "domain/resource"
+  # * "node@domain/resource"
+  #
+  # @return [String] the JID as a string
   def to_s
     s = @domain
     s = "#{@node}@#{s}" if @node
