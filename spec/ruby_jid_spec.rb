@@ -109,6 +109,22 @@ describe RubyJID do
     jid.resource.should be == %q{repulsive !#"$%&'()*+,-./:;<=>?@[\]^_`{|}~resource}
   end
 
+  it 'maintains node and resource case, but downcases the domain' do
+    jid = described_class.new "Foo@Bar.com/Baz"
+    jid.node.should be == 'Foo'
+    jid.domain.should be == 'bar.com'
+    jid.resource.should be == 'Baz'
+    jid.to_s.should be == 'Foo@bar.com/Baz'
+  end
+
+  it 'compares case insensitively' do
+    jid1 = described_class.new "Foo@Bar.com/Baz"
+    jid2 = described_class.new "foo@bar.com/baz"
+    jid3 = described_class.new "Foo@Bar.com/other"
+    jid1.should be == jid2
+    jid1.should_not be == jid3
+  end
+
   it 'rejects empty jid parts' do
     expect { described_class.new '@wonderland.lit' }.to raise_error(ArgumentError)
     expect { described_class.new 'wonderland.lit/' }.to raise_error(ArgumentError)

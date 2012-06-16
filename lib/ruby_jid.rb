@@ -89,7 +89,7 @@ class RubyJID
     if @domain.nil? && @resource.nil?
       @node, @domain, @resource = @node.to_s.scan(PATTERN).first
     end
-    [@node, @domain].each { |part| part.downcase! if part }
+    @domain.downcase! if @domain
 
     validate
   end
@@ -123,7 +123,7 @@ class RubyJID
   end
 
   def <=>(jid)
-    self.to_s <=> jid.to_s
+    to_s.downcase <=> jid.to_s.downcase
   end
 
   def eql?(jid)
@@ -131,7 +131,7 @@ class RubyJID
   end
 
   def hash
-    self.to_s.hash
+    to_s.hash
   end
 
   # Turn the JID into a string
