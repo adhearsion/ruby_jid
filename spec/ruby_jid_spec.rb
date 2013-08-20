@@ -93,6 +93,13 @@ describe RubyJID do
     jid.should_not be_empty
   end
 
+  it 'accepts a full URI' do
+    described_class.valid?('xmpp:alice@wonderland.lit/tea').should be_true
+    jid = described_class.new 'xmpp:alice@wonderland.lit/tea'
+    jid.to_s.should be == 'alice@wonderland.lit/tea'
+    jid.to_uri.should be == 'xmpp:alice@wonderland.lit/tea'
+  end
+
   it 'accepts separator characters in resource part' do
     described_class.valid?('alice@wonderland.lit/foo/bar@blarg test').should be_true
     jid = described_class.new 'alice@wonderland.lit/foo/bar@blarg test'

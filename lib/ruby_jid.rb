@@ -48,7 +48,7 @@ require "ruby_jid/version"
 class RubyJID
   include Comparable
 
-  PATTERN = /\A(?:([^@]*)@)??([^@\/]*)(?:\/(.*?))?\Z/.freeze
+  PATTERN = /\A(xmpp:)?(?:([^@]*)@)??([^@\/]*)(?:\/(.*?))?\Z/.freeze
 
   # http://tools.ietf.org/html/rfc6122#appendix-A
   NODE_PREP = /[[:cntrl:] "&'\/:<>@]/.freeze
@@ -96,7 +96,7 @@ class RubyJID
     @node, @domain, @resource = node, domain, resource
 
     if @domain.nil? && @resource.nil?
-      @node, @domain, @resource = @node.to_s.scan(PATTERN).first
+      @scheme, @node, @domain, @resource = @node.to_s.scan(PATTERN).first
     end
     @domain.downcase! if @domain
 
@@ -157,6 +157,10 @@ class RubyJID
     s = "#{@node}@#{s}" if @node
     s = "#{s}/#{@resource}" if @resource
     s
+  end
+
+  def to_uri
+    "xmpp:#{to_s}"
   end
 
   private
